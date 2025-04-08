@@ -12,12 +12,12 @@ The application architecture adopts a microservices-inspired modular design, all
 ---
 
 Team Contribution:
-- Backend - Vishnu, Chaitanya
+- Backend - Vishnu, Chaitanya, Sandeep
 - Frontend - Sindhuja, Himaansh
 - Dockerfile - Hema
 - Kubernetes - Khushi, Himaansh
 - Jenkins - Sandeep, Vishnu
-- Prometheus & Grafana - Sindhuja, Sandeep
+- Prometheus & Grafana - Sindhuja, Khushi
 
 ---
 
