@@ -91,18 +91,6 @@ CMD ["sh", "-c", "cd my-app && npm start & python manage.py runserver 0.0.0.0:80
 
 ---
 
-## 🔁 CI/CD + Container Workflow
-
-```mermaid
-graph TD
-    A[SRE Concepts & Setup] --> B[Dockerfile Created for Django + React App]
-    B --> C[Image Pushed to DockerHub]
-    C --> D[Kubernetes Uses Docker Image to Create Pods]
-    D --> E[Jenkins Pipeline Automates Deployment]
-```
-
----
-
 ## ✅ Summary of Dockerfile
 
 - 🐍 Uses lightweight Python base image  
