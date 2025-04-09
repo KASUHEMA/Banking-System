@@ -1,4 +1,4 @@
-# Banking System
+# 🏦 Banking System
 **BankingSystem** is a robust, production-ready online banking application built using Django, React, MySQL, and modern DevOps tooling. It simulates core banking operations including account management, transactions, interest calculations, and user authentication. This project integrates modern SRE (Site Reliability Engineering) principles, ensuring high availability, observability, scalability, and operational efficiency.
 
 The application architecture adopts a microservices-inspired modular design, allowing services like account management, transaction processing, interest calculations, and authentication to work independently and communicate seamlessly.
@@ -13,8 +13,7 @@ Team Contribution:
 - Jenkins - Sandeep, Vishnu
 - Prometheus & Grafana - Sindhuja, Khushi
 * * *
-
-`# 🏦 BankingSystem Deployment Guide This guide will help you clone and deploy the **BankingSystem** project using Docker and Kubernetes via Minikube.
+# 🏦 BankingSystem Deployment Guide
 
 --- 
 ## ✅ Prerequisites - DockerHub account (username & password)
