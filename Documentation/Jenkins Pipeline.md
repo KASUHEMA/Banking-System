@@ -279,60 +279,27 @@ You’ve run many commands to troubleshoot Minikube in Jenkins. Below are the ke
 - **kubectl get pods**: Checks running Pods after Minikube starts. 📦
 - **kubectl get svc**: Lists services to verify networking setup. 🌐
 
-## Appropriate and Required Steps to Start Minikube in Jenkins 🛠️
+## 🛠️ Minikube Setup Flow in Jenkins (Mermaid Diagram)
 
-Here’s a streamlined set of steps and commands to ensure Minikube starts correctly in Jenkins, assuming GitHub and Docker credentials are already configured:
+```mermaid
+sequenceDiagram
+    participant User
+    participant Jenkins
+    participant Docker
+    participant Minikube
+    participant KubeConfig
 
-1. **Switch to Jenkins User** 🔐
-   - **Command**: `sudo -su jenkins`
-   - **Purpose**: Runs commands as the Jenkins user, matching your root user setup.
-   - **Why**: Ensures all actions align with Jenkins’ permissions and home directory.
-
-2. **Ensure Docker is Running** 🐳
-   - **Command**: `docker ps`
-   - **Purpose**: Confirms Docker is active, as Minikube uses it as the driver.
-   - **Why**: Minikube requires a running Docker daemon to operate.
-
-3. **Clean Up Existing Minikube (Optional)** 🧹
-   - **Command**: `minikube delete`
-   - **Purpose**: Removes any old Minikube cluster to avoid conflicts.
-   - **Why**: Ensures a fresh start, especially if prior attempts failed.
-
-4. **Start Minikube with Docker Driver** 🚀
-   - **Command**: `minikube start --driver=docker`
-   - **Purpose**: Launches Minikube using Docker as the virtualization layer.
-   - **Why**: Explicitly sets the driver, avoiding ambiguity on Jenkins’ environment.
-
-5. **Verify Minikube Status** 🔍
-   - **Command**: `minikube status`
-   - **Purpose**: Checks if Minikube is running and healthy.
-   - **Why**: Confirms the cluster is up before proceeding.
-
-6. **Set Up Kubernetes Config Directory** 📂
-   - **Command**: `sudo mkdir -p /var/lib/jenkins/.kube`
-   - **Purpose**: Creates a directory for Kubernetes configuration.
-   - **Why**: Jenkins needs this to store Minikube’s kubeconfig.
-
-7. **Copy Minikube Config to Jenkins** 🔐
-   - **Command**: `sudo cp ~/.minikube/config/config /var/lib/jenkins/.kube/config`
-   - **Purpose**: Provides Jenkins with Minikube’s cluster credentials.
-   - **Why**: Allows `kubectl` commands from Jenkins to target Minikube.
-   - **Note**: Adjust the source path if Minikube’s config is elsewhere (e.g., `/var/lib/jenkins/.minikube/`).
-
-8. **Set Permissions for Jenkins** 🔒
-   - **Command**: `sudo chown -R jenkins:jenkins /var/lib/jenkins/.kube`
-   - **Purpose**: Ensures Jenkins can read/write the kubeconfig.
-   - **Why**: Prevents permission errors when Jenkins runs `kubectl`.
-
-9. **Verify Cluster Access** 🌐
-   - **Command**: `kubectl cluster-info`
-   - **Purpose**: Confirms Jenkins can communicate with Minikube.
-   - **Why**: Validates the setup before deploying apps.
-
-10. **Check Initial State** 📦
-    - **Commands**: `kubectl get pods` and `kubectl get svc -A`
-    - **Purpose**: Lists Pods and services to ensure the cluster is ready.
-    - **Why**: Provides a baseline before applying manifests.
+    User->>Jenkins: 🔐 sudo -su jenkins
+    Jenkins->>Docker: 🐳 docker ps (Ensure Docker is running)
+    Jenkins->>Minikube: 🧹 minikube delete (optional)
+    Jenkins->>Minikube: 🚀 minikube start --driver=docker
+    Jenkins->>Minikube: 🔍 minikube status
+    Jenkins->>KubeConfig: 📂 mkdir /var/lib/jenkins/.kube
+    Jenkins->>KubeConfig: 🔐 cp ~/.minikube/config/config ~/.kube/config
+    Jenkins->>KubeConfig: 🔒 chown -R jenkins:jenkins ~/.kube
+    Jenkins->>Minikube: 🌐 kubectl cluster-info
+    Jenkins->>Minikube: 📦 kubectl get pods && kubectl get svc -A
+```
 
 ## Why These Steps?
 - Your setup as root user (`sudo -su jenkins`) and repeated `minikube start` attempts suggest permission or config issues. These steps ensure proper permissions and a clean Minikube start. ✅
@@ -341,48 +308,32 @@ Here’s a streamlined set of steps and commands to ensure Minikube starts corre
 
 ---
 
-# Kubernetes Workflow with Minikube in Jenkins ⚙️
+```mermaid
+graph TD
+    A[Prepare Environment] --> B[Ensure Docker is Running]
+    B --> C[Start Minikube with Docker Driver]
+    C --> D[Optional Cleanup of Old Clusters]
+    D --> E[Configure Jenkins Access]
+    E --> F[Copy Kubeconfig to Jenkins]
+    F --> G[Set Permissions for Jenkins]
+    G --> H[Validate Cluster Access]
+    H --> I[Apply Kubernetes YAML Files]
+    I --> J[Deploy Django React Redis]
+    J --> K[Monitor Pod Readiness]
+    K --> L[Expose Services via NodePort or Localhost]
+    L --> M[Jenkins Monitors Pipeline Health]
+    M --> N[Access and Debug with Kubectl]
 
-Here’s how Kubernetes works with Minikube in your Jenkins setup! 🚀
+    subgraph Context
+        O1[Minikube uses Docker as driver]
+        O2[Kubeconfig required for Kubectl]
+        O3[YAML files stored in k8s directory]
+        O4[Prometheus Grafana Optional]
+    end
 
-1. **Prepare Environment** 🛠️
-   - Jenkins runs as the root user (`sudo -su jenkins`) to manage Minikube. 🔐
-   - Docker is confirmed running, and Minikube starts with the Docker driver. 🐳
+    J --> O3
+    C --> O1
+    F --> O2
+    M --> O4
 
-2. **Start Minikube Cluster** 🚀
-   - Minikube launches a local Kubernetes cluster, cleaned up if needed. 🧹
-   - Status is verified to ensure the cluster is operational. 🔍
-
-3. **Configure Access** 🔐
-   - Minikube’s kubeconfig is copied to `/var/lib/jenkins/.kube/config`. 📂
-   - Permissions are set so Jenkins can control the cluster. 🔒
-
-4. **Validate Cluster** 🌐
-   - Jenkins checks cluster info and initial Pods/services to confirm readiness. 📦
-   - Ensures Kubernetes is accessible before deployments. ✅
-
-5. **Deploy Resources** 📋
-   - Jenkins applies YAMLs (e.g., from `k8s/`) to deploy apps like Django and React. 🌍
-   - Monitoring tools (Prometheus, Grafana) are set up in the `monitoring` namespace. 📈
-
-6. **Schedule Pods** 🗺️
-   - Kubernetes schedules Pods on the Minikube node based on resource needs. 📍
-   - Single-node setup simplifies scheduling in this local environment. ⚖️
-
-7. **Manage Deployments** 🕹️
-   - Controllers ensure Pods stay running, restarting them if they fail. 🔄
-   - Jenkins waits for Pods to be ready, ensuring deployment success. ⏳
-
-8. **Set Up Networking** 🌐
-   - Services (e.g., `django-service`) provide access via Minikube IPs or port-forwarding. 📡
-   - Jenkins exposes services locally for testing (e.g., `localhost:8000`). 🔗
-
-9. **Run and Monitor** 💻
-   - The app runs with Django, React, and supporting services like Redis. 🌍
-   - Jenkins continuously checks Pod health, keeping the pipeline alive. 👁️‍🗨️
-
-10. **Access and Debug** 🔍
-    - Services are accessible via Minikube URLs or local ports. 👀
-    - Commands like `kubectl get pods` help debug if issues arise. 🩺
-
----
+```
