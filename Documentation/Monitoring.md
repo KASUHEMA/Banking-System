@@ -92,3 +92,30 @@ Here’s how Kubernetes manages the monitoring stack with Prometheus and Grafana
    - Update images (e.g., new Prometheus version) and reapply for rolling updates. 🔄
   
 ---
+```mermaid
+sequenceDiagram
+    participant User
+    participant kubectl
+    participant K8sAPI
+    participant Scheduler
+    participant Prometheus
+    participant Grafana
+
+    User->>kubectl: Apply Prometheus & Grafana YAMLs
+    kubectl->>K8sAPI: Send definitions
+    K8sAPI->>Scheduler: Schedule Pods
+    Scheduler->>Prometheus: Start Prometheus Pod
+    Scheduler->>Grafana: Start Grafana Pod
+
+    Prometheus->>K8sAPI: Register scrape targets (Django, Redis, itself)
+    Prometheus->>Django: Scrape /metrics on port 8000
+    Prometheus->>Redis: Scrape /metrics on port 9121
+    Prometheus->>Prometheus: Scrape self on port 9090
+
+    Grafana->>Prometheus: Query metrics for dashboards
+    User->>Grafana: View dashboards on NodePort 32000
+
+    Note over Prometheus, Grafana: Pods auto-restart if failed (self-healing)
+    Note over K8sAPI, Scheduler: Supports rolling updates via deployments
+
+```
