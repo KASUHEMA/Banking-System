@@ -245,7 +245,7 @@ stage('Keep Alive') {
 - It’s designed to keep services running and monitored during the Jenkins job, useful for testing or demos. 🖥️
 - To stop it, you must manually abort the Jenkins job, which triggers the `post` cleanup to kill port-forwarding processes. 🛑
 
-## Filtered Commands Used 🛠️
+## Commands Used 🛠️
 - From your list, here are the key commands relevant to this setup (unnecessary ones like `ngrok` setup omitted):
   - `minikube start --driver=docker`: Starts Minikube with Docker driver. 🚀
   - `minikube status`: Checks Minikube cluster status. 🔍
@@ -265,7 +265,7 @@ stage('Keep Alive') {
 
 Here’s an analysis of your commands to start Minikube in Jenkins, with the appropriate and required steps added! 🌟
 
-## Your Commands Analyzed 📜
+## Commands Analyzed 📜
 You’ve run many commands to troubleshoot Minikube in Jenkins. Below are the key ones relevant to starting Minikube, with explanations:
 
 - **sudo -su jenkins**: Switches to the Jenkins user to run commands as Jenkins. 🔐
