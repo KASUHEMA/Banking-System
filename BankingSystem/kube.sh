@@ -21,7 +21,7 @@ echo "📦 Applying Kubernetes manifests from k8s/"
 kubectl apply -f k8s/
 
 echo "⏳ Waiting for all pods to be ready..."
-timeout=300
+timeout=500
 interval=10
 elapsed=0
 while true; do
