@@ -138,3 +138,40 @@ Here’s how Kubernetes manages your Django-React banking system with Celery and
 10. **Scaling and Updates** 📏
     - Scale by increasing replicas (e.g., in `celery-worker.yaml`). 📈
     - Update images (e.g., `bank:v3`) and reapply for rolling updates. 🔄
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant kubectl
+    participant K8sAPI as Kubernetes API Server
+    participant Scheduler
+    participant Node
+    participant Controller
+    participant Service
+    participant React
+    participant Django
+    participant Celery
+    participant Redis
+    participant Prometheus
+
+    User->>kubectl: Apply YAMLs (Django, React, Redis, Celery)
+    kubectl->>K8sAPI: Submit manifests
+    K8sAPI->>Scheduler: Schedule Pods
+    Scheduler->>Node: Assign Pods (based on CPU/memory)
+    K8sAPI->>Controller: Start Deployments
+    Controller->>Node: Launch Pods
+    Node->>Service: Register endpoints
+
+    Django->>Redis: Connect to Redis via redis-service
+    Celery->>Redis: Pull tasks from queue
+    React->>Django: Make API calls (port 8000)
+    Django->>Celery: Trigger background tasks
+    Celery->>Redis: Store task results
+
+    Redis->>Prometheus: Expose metrics via Redis Exporter
+    Prometheus->>Prometheus: Monitor Redis performance
+
+    Controller->>Node: Restart failed Pods (self-healing)
+    User->>kubectl: Scale deployments or update image
+
+```
