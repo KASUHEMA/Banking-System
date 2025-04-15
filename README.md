@@ -6,7 +6,7 @@ We built the **BankingSystem** project to tackle real-world banking complexity w
 
 ---
 Team Contribution:
-- Backend - Vishnu, Chaitanya, Sandeep
+- Backend - Vishnu, Chaitanya, Sandeep,Hema
 - Frontend - Sindhuja, Himaansh
 - Dockerfile - Hema
 - Kubernetes - Khushi, Himaansh
